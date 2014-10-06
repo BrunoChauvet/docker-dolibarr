@@ -1,0 +1,18 @@
+- name: FourKitchens LAMP
+  hosts: localhost
+  vars_files:
+    - ../var/settings.yml
+
+  tasks:
+  - name: General | Install required packages.
+    action: apt pkg={{ item }} state=installed
+    with_items:
+    - git
+
+  - name: clone fourkitchens/server-playbooks repo
+    git: repo=git@github.com:fourkitchens/server-playbooks.git dest=/etc/fourkitchens
+
+  - name: copy default settings
+    action: template src=/etc/fourkitchens/server-playbooks/ubuntu-12.04-lamp-dev/vars/default-settings.yml dest=/etc/fourkitchens/server-playbooks/ubuntu-12.04-lamp-dev/vars/settings.yml
+
+  - include: /etc/fourkitchens/server-playbooks/ubuntu-12.04-lamp-dev/setup.yml --tags="common"

@@ -1,0 +1,27 @@
+- name: Apache setup
+  hosts: localhost
+  vars_files:
+    - ../var/settings.yml
+
+  tasks:
+    - name: Install Apache
+      action: apt name={{ item }} state=present
+      with_items:
+        - php5
+        - apache2
+        - php5-mysql
+        - php-apc
+        - php5-xmlrpc
+        - php-soap
+        - php5-gd
+        - sendmail
+        - unzip
+
+    - name: enable php module
+      apache2_module: state=present name={{ item }}
+      with_items:
+        - php5
+        - proxy
+        - proxy_http
+        - headers
+        - rewrite

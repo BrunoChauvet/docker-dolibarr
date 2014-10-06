@@ -1,0 +1,13 @@
+- name: Dolibarr setup
+  hosts: localhost
+  vars_files:
+    - ../var/settings.yml
+
+  - name: MySQL | Create dolibarr database
+    mysql_db: name=dolibarr state=present user="root" password="{{ mysql_root_password }}"
+
+  - name: MySQL | Create dolibarr database user
+    mysql_user: name=dolibarr password=dolibarr priv=dolibarr.*:ALL,GRANT state=present user="root" password="{{ mysql_root_password }}"
+
+  - git: repo=git@github.com:maestrano/dolibarr.git
+         dest=/var/www/dolibarr

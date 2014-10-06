@@ -1,0 +1,23 @@
+FROM centos:centos6
+MAINTAINER Maestrano <it@maestrano.com>
+
+# Install Ansible
+RUN yum -y update && yum -y install ansible
+
+# Add playbooks
+# RUN mkdir /etc/ansible/
+ADD ansible/playbooks/ /etc/ansible/playbooks/
+ADD ansible/templates/ /etc/ansible/templates/
+ADD ansible/var/ /etc/ansible/var/
+ADD ansible/var/default-settings.yml /etc/ansible/var/settings.yml
+ADD ansible/inventory /etc/ansible/hosts
+
+WORKDIR /etc/ansible
+
+
+# Run Ansible playbooks
+RUN ansible-playbook /etc/ansible/playbooks/mysql.yml -c local
+#RUN ansible-playbook /etc/ansible/playbooks/apache.yml -c local
+#RUN ansible-playbook /etc/ansible/playbooks/fourkitchens.yml -c local
+
+EXPOSE 22 3000 80 8080 3306
